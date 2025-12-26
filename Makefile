@@ -1,4 +1,4 @@
-install:install:
+install:
 	pip install uv
 	pip install gunicorn uvicorn
 	uv venv
