@@ -9,6 +9,7 @@ from django.views.generic import (
     DetailView,
     ListView,
     UpdateView,
+    TemplateView
 )
 
 from ..labels.models import Label
@@ -28,7 +29,6 @@ class TaskListView(LoginRequiredMixin, ListView):
         self.filterset = self.filterset_class(
             self.request.GET,
             queryset=queryset,
-            
         )
         return self.filterset.qs.distinct()
 
@@ -41,6 +41,12 @@ class TaskListView(LoginRequiredMixin, ListView):
 
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
+    model = Task
+    form_class = TaskForm
+    template_name = 'general/general_form.html'
+    success_url = reverse_lazy('tasks')
+    success_message = _('Task successfully created')
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['initial'] = {
@@ -48,12 +54,6 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
             'labels': Label.objects.none()
         }
         return kwargs
-
-    model = Task
-    form_class = TaskForm
-    template_name = 'general/general_form.html'
-    success_url = reverse_lazy('tasks')
-    success_message = _('Task successfully created')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -120,3 +120,7 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['title'] = _('Task view')
         return context
+
+
+class HomeView(TemplateView):
+    template_name = 'home.html'

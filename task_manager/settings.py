@@ -125,10 +125,17 @@ FIXTURE_DIRS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGES = (
-    ("ru", "Russian"),
-    ("en", "English"),
-)
+LANGUAGES = [
+    ('en', 'English'),
+    ('ru', 'Russian'),
+]
+
+USE_I18N = True
+USE_L10N = True
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
 LOCALE_PATHS = [BASE_DIR / 'locale']
 
