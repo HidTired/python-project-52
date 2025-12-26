@@ -8,10 +8,12 @@ dev:
 	python manage.py runserver
 
 lint:
-	python -m ruff check .
+	uv pip install ruff --quiet
+	ruff check .
 
 lint-fix:
-	python -m ruff check --fix .
+	uv pip install ruff --quiet
+	ruff check --fix .
 
 start:
 	python manage.py runserver
