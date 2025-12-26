@@ -1,4 +1,4 @@
-install:
+install:install:
 	pip install uv
 	pip install gunicorn uvicorn
 	uv venv
@@ -8,12 +8,10 @@ dev:
 	python manage.py runserver
 
 lint:
-	uv pip install ruff==0.14.10 --quiet
-	.venv/bin/ruff check .
+	uv run ruff check .
 
 lint-fix:
-	uv pip install ruff==0.14.10 --quiet
-	.venv/bin/ruff check --fix .
+	uv run ruff check --fix .
 
 start:
 	python manage.py runserver
