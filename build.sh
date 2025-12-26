@@ -1,12 +1,6 @@
-# Устанавливаем uv
+#!/usr/bin/env bash
+
 curl -LsSf https://astral.sh/uv/install.sh | sh
-export PATH="$HOME/.local/bin:$PATH"
+source $HOME/.local/bin/env
 
-# Устанавливаем зависимости
-uv sync --frozen
-
-# Миграции и статика
-uv run python manage.py collectstatic --noinput
-uv run python manage.py migrate
-
-echo "✅ Build completed!"
+make install && make migrate
