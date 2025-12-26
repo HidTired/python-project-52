@@ -1,4 +1,4 @@
-from django.contrib import messages
+﻿from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -28,7 +28,7 @@ class TaskListView(LoginRequiredMixin, ListView):
         self.filterset = self.filterset_class(
             self.request.GET,
             queryset=queryset,
-            user=self.request.user
+            
         )
         return self.filterset.qs.distinct()
 

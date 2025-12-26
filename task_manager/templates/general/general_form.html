@@ -1,13 +1,5 @@
-{% extends "home.html" %}
-{% load django_bootstrap5 %}
-
-{% load i18n %}
-
-{% block main %}
-<h1 class="my-4">{{ title }}</h1>
-<form method="post">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    <input class="btn btn-primary" type="submit" value="{{ button }}">
+﻿<form method="post">
+{% csrf_token %}
+{{ form.as_p }}
+<button type="submit">Save</button>
 </form>
-{% endblock %}
