@@ -9,11 +9,11 @@ dev:
 
 lint:
 	uv pip install ruff --quiet
-	ruff check .
+	python -m ruff check .
 
 lint-fix:
 	uv pip install ruff --quiet
-	ruff check --fix .
+	python -m ruff check --fix .
 
 start:
 	python manage.py runserver
