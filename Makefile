@@ -2,15 +2,17 @@ install:
 	pip install uv
 	pip install gunicorn uvicorn
 	uv venv
-	uv pip install -r requirements.txt
+	uv sync --frozen
 
 dev:
 	python manage.py runserver
 
 lint:
+	uv sync --dev
 	uv run ruff check .
 
 lint-fix:
+	uv sync --dev
 	uv run ruff check --fix .
 
 start:
@@ -23,9 +25,11 @@ build:
 	./build.sh
 
 test:
+	uv sync --dev
 	uv run python manage.py test
 
 test-cov:
+	uv sync --dev
 	uv run coverage run ./manage.py test
 	uv run coverage xml
 

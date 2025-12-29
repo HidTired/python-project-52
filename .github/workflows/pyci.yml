@@ -23,7 +23,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install uv gunicorn uvicorn
           uv venv
-          uv pip install -r requirements.txt
+          uv sync --frozen --no-cache
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Run linter
