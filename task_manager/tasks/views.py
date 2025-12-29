@@ -44,7 +44,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
     form_class = TaskForm
     template_name = 'general/general_form.html'
-    success_url = reverse_lazy('tasks')
+    success_url = reverse_lazy('home')
     success_message = _('Task successfully created')
 
     def get_form_kwargs(self):
@@ -71,7 +71,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     model = Task
     form_class = TaskForm
     template_name = 'general/general_form.html'
-    success_url = reverse_lazy('tasks')
+    success_url = reverse_lazy('home')
     success_message = _('Task successfully updated')
 
     def form_valid(self, form):
@@ -88,7 +88,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
 class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Task
     template_name = 'general/general_delete_confirm.html'
-    success_url = reverse_lazy('tasks')
+    success_url = reverse_lazy('home')
     success_message = _('Task successfully deleted')
     permission_denied_message = _("Only the author can delete a task")
 
@@ -97,7 +97,7 @@ class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def handle_no_permission(self):
         messages.error(self.request, self.permission_denied_message)
-        return redirect('tasks')
+        return redirect('home')
 
     def form_valid(self, form):
         messages.success(self.request, self.success_message)

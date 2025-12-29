@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from django.urls import reverse
 
 from task_manager.statuses.models import Status
 from task_manager.tasks.models import Task
@@ -18,13 +17,13 @@ class StatusTestCase(TestCase):
         self.client.login(username='testuser', password='testpass123')
 
     def test_status_list_view(self):
-        response = self.client.get(reverse('home')) 
+        response = self.client.get('/statuses/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Status')
         self.assertTemplateUsed(response, 'status/status_list.html')
 
     def test_status_create_view(self):
-        response = self.client.post(reverse('create'), {
+        response = self.client.post('/statuses/create/', {
             'name': 'New Status'
         })
         self.assertEqual(response.status_code, 302)
@@ -32,7 +31,7 @@ class StatusTestCase(TestCase):
 
     def test_status_update_view(self):
         response = self.client.post(
-            reverse('update', args=[self.status.id]), 
+            f'/statuses/{self.status.id}/update/', 
             {'name': 'Updated Status'}
         )
         self.assertEqual(response.status_code, 302)
@@ -41,7 +40,7 @@ class StatusTestCase(TestCase):
 
     def test_status_delete_view(self):
         response = self.client.post(
-            reverse('delete', args=[self.status.id])  
+            f'/statuses/{self.status.id}/delete/' 
         )
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Status.objects.filter(id=self.status.id).exists())
@@ -55,7 +54,7 @@ class StatusTestCase(TestCase):
         )
 
         response = self.client.post(
-            reverse('delete', args=[self.status.id]) 
+            f'/statuses/{self.status.id}/delete/'  
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(Status.objects.filter(id=self.status.id).exists())

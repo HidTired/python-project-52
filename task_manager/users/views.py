@@ -10,7 +10,7 @@ from .forms import UserForm
 from .models import User
 
 
-class UserListView(ListView):
+class UserListView(LoginRequiredMixin, ListView):
     model = User
     template_name = 'user/list.html'
     context_object_name = 'users'
@@ -18,15 +18,16 @@ class UserListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = _('Users')
+        context['button'] = _('Create user')
         return context
 
 
-class UserCreateView(CreateView):
+class UserCreateView(LoginRequiredMixin, CreateView):
     model = User
     form_class = UserForm
     template_name = 'general/general_form.html'
-    success_url = reverse_lazy('login')
-    success_message = _('User successfully registered')
+    success_url = reverse_lazy('home')
+    success_message = _('User successfully created')
 
     def form_valid(self, form):
         messages.success(self.request, self.success_message)
@@ -34,8 +35,8 @@ class UserCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = _('Registration')
-        context['button'] = _('Register')
+        context['title'] = _('Create user')
+        context['button'] = _('Create')
         return context
 
 
@@ -43,17 +44,18 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = User
     form_class = UserForm
     template_name = 'general/general_form.html'
-    success_url = reverse_lazy('users')
+    success_url = reverse_lazy('home')
     success_message = _('User successfully updated')
-    permission_denied_message = _("You don't have"
-                                  " permission to edit another user")
+    permission_denied_message = _(
+        "You don't have permission to edit another user"
+    )
 
     def test_func(self):
         return self.get_object() == self.request.user
 
     def handle_no_permission(self):
         messages.error(self.request, self.permission_denied_message)
-        return redirect('users')
+        return redirect('home')
 
     def form_valid(self, form):
         messages.success(self.request, self.success_message)
@@ -71,19 +73,22 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = User
     template_name = 'general/general_delete_confirm.html'
-    success_url = reverse_lazy('users')
+    success_url = reverse_lazy('home')
     success_message = _('User successfully deleted')
-    permission_denied_message = _("You don't have"
-                                  " permission to edit another user")
+    permission_denied_message = _(
+        "You don't have permission to delete another user"
+    )
     protected_message = _('Cannot delete user because it is in use')
-    protected_url = reverse_lazy('users')
+    protected_url = reverse_lazy('home')
 
     def test_func(self):
-        return self.get_object() == self.request.user
+        obj = self.get_object()
+        user = self.request.user
+        return user.is_superuser and obj != user
 
     def handle_no_permission(self):
         messages.error(self.request, self.permission_denied_message)
-        return redirect('users')
+        return redirect('home')
 
     def form_valid(self, form):
         try:

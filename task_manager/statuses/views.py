@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.views import View
+from django.views.generic import CreateView, ListView, UpdateView
 
 from .forms import StatusForm
 from .models import Status
@@ -25,7 +26,7 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
     model = Status
     form_class = StatusForm
     template_name = 'general/general_form.html'
-    success_url = reverse_lazy('statuses')
+    success_url = reverse_lazy('home')
     success_message = _('Status successfully created')
 
     def form_valid(self, form):
@@ -43,7 +44,7 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
     model = Status
     form_class = StatusForm
     template_name = 'general/general_form.html'
-    success_url = reverse_lazy('statuses')
+    success_url = reverse_lazy('home')
     success_message = _('Status successfully updated')
 
     def form_valid(self, form):
@@ -57,25 +58,26 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
 
-class StatusDeleteView(LoginRequiredMixin, DeleteView):
-    model = Status
+class StatusDeleteView(LoginRequiredMixin, View):  # ← View!
     template_name = 'general/general_delete_confirm.html'
-    success_url = reverse_lazy('statuses')
+    success_url = reverse_lazy('home')
     success_message = _('Status successfully deleted')
-    error_message = _('Cannot delete status')
+    error_message = _('Cannot delete status used in tasks')
 
-    def form_valid(self, form):
-        if self.get_object().task_set.exists():
-            messages.error(self.request, self.error_message)
-            return redirect(self.success_url)
-
-        messages.success(self.request, self.success_message)
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
+    def get(self, request, pk):
+        status = get_object_or_404(Status, pk=pk)
+        context = {
+            'object': status,
             'title': _('Delete status'),
             'button': _('Yes, delete')
-        })
-        return context
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        status = get_object_or_404(Status, pk=pk)
+        if status.task_set.exists():
+            messages.error(request, self.error_message)
+        else:
+            status.delete()
+            messages.success(request, self.success_message)
+        return redirect(self.success_url)
