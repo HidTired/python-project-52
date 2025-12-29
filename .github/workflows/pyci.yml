@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      SECRET_KEY: ${{django-insecure-41#jpljorl*njd*1k*mjzp$c@kki%0yjc#7%5-lm}}
 
     steps:
       - uses: actions/checkout@v4
