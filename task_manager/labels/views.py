@@ -9,6 +9,8 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from .forms import LabelForm
 from .models import Label
 
+LABEL_LIST_URL = reverse_lazy('labels:list')
+
 
 class LabelListView(ListView):
     model = Label
@@ -26,7 +28,7 @@ class LabelCreateView(SuccessMessageMixin, CreateView):
     model = Label
     form_class = LabelForm
     template_name = 'general/general_form.html'
-    success_url = reverse_lazy('labels:list')
+    success_url = LABEL_LIST_URL  
     success_message = _('Label successfully created')
 
     def get_context_data(self, **kwargs):
@@ -40,7 +42,7 @@ class LabelUpdateView(SuccessMessageMixin, UpdateView):
     model = Label
     form_class = LabelForm
     template_name = 'general/general_form.html'
-    success_url = reverse_lazy('labels:list')
+    success_url = LABEL_LIST_URL  
     success_message = _('Label successfully updated')
 
     def get_context_data(self, **kwargs):
@@ -52,7 +54,7 @@ class LabelUpdateView(SuccessMessageMixin, UpdateView):
 class LabelDeleteView(LoginRequiredMixin, DeleteView):
     model = Label
     template_name = 'general/general_delete_confirm.html'
-    success_url = reverse_lazy('labels:list')
+    success_url = LABEL_LIST_URL  
     success_message = _('Label successfully deleted')
     error_message = _('Cannot delete label')
 
