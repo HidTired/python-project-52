@@ -58,13 +58,6 @@ class UserListView(LoginRequiredMixin, ListView):
     context_object_name = 'users'
 
 
-class UserCreateView(LoginRequiredMixin, CreateView):
-    model = User
-    fields = ('username', 'first_name', 'last_name', 'email', 'password')
-    template_name = 'general/general_form.html'
-    success_url = '/'
-
-
 class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     fields = ('username', 'first_name', 'last_name', 'email')
@@ -85,13 +78,6 @@ def test_func(self):
 class UserPassesTestMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_superuser
-
-
-class UserCreateView(LoginRequiredMixin, CreateView):
-    model = User
-    fields = ('username', 'first_name', 'last_name', 'email', 'password')
-    template_name = 'general/general_form.html'
-    success_url = '/'
 
 
 class UserPassesTestMixin(UserPassesTestMixin):

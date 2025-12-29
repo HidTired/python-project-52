@@ -8,8 +8,8 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     ListView,
+    TemplateView,
     UpdateView,
-    TemplateView
 )
 
 from ..labels.models import Label
