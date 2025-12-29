@@ -44,8 +44,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=IlyaLysenkov-Hexlet_python-project-522
-            -Dsonar.organization=ilyalysenkov-hexlet
+            -Dsonar.projectKey=
+            -Dsonar.organization=
             -Dsonar.python.version=3.12
             -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.coverage.exclusions=tests/**
