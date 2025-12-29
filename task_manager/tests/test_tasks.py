@@ -35,15 +35,18 @@ class TaskTestCase(TestCase):
         response = self.client.get(reverse('task:create'))
         self.assertEqual(response.status_code, 200)
 
-        
     def test_task_delete_by_author(self):
         self.client.login(username='testuser', password='testpass')
-        response = self.client.post(reverse('tasks:delete', args=[self.task.id]))  
+        response = self.client.post(
+            reverse('tasks:delete', args=[self.task.id])
+        )
         self.assertEqual(response.status_code, 302)
 
     def test_task_delete_by_non_author(self):
         self.client.login(username='otheruser', password='testpass')
-        response = self.client.post(reverse('tasks:delete', args=[self.task.id])) 
+        response = self.client.post(
+            reverse('tasks:delete', args=[self.task.id])
+        )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(Task.objects.filter(id=self.task.id).exists())
 
