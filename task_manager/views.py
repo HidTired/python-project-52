@@ -78,7 +78,7 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = USERS_LIST_URL
     template_name = GENERAL_DELETE_TEMPLATE
 
-    def test_func(self):
+    def test_func(self):    
         return self.request.user.is_superuser
 
 
