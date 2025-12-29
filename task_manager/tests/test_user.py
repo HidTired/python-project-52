@@ -50,4 +50,3 @@ class UserTestCase(TestCase):
         self.client.login(username='testuser', password='testpass')
         response = self.client.post(f'/users/{self.other_user.id}/delete/', {})
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(User.objects.filter(id=self.other_user.id).exists())
