@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class TestUser:
     def test_load_users(self, transactional_db, django_user_model):
         """Фикс CI теста - создаём 3 пользователя"""
