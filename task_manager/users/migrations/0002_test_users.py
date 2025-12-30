@@ -1,10 +1,9 @@
 from django.db import migrations
 
 def create_test_users(apps, schema_editor):
-    """Создаёт 3 пользователя БЕЗОШИБОЧНО"""
+    """Создаёт 3 пользователя БЕЗОШИБОЧНО для миграции"""
     User = apps.get_model('users', 'User')
     
-    # ✅ 3 пользователя с правильными паролями
     users_data = [
         {'username': 'user1', 'password': '123'},
         {'username': 'user2', 'password': '123'},
@@ -12,13 +11,14 @@ def create_test_users(apps, schema_editor):
     ]
     
     for data in users_data:
+        # ✅ В миграции используем .password напрямую!
         user, created = User.objects.get_or_create(
             username=data['username'],
             defaults={'password': data['password']}
         )
         if not created:
-            # ✅ Обновляем пароль если пользователь уже существует
-            user.set_password(data['password'])
+            # ✅ Прямое присвоение пароля (работает в миграции)
+            user.password = data['password']
             user.save()
 
 def delete_test_users(apps, schema_editor):
