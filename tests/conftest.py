@@ -1,22 +1,25 @@
-import pytest
-from unittest.mock import patch, MagicMock
-from django.contrib.auth import get_user_model
+from unittest.mock import MagicMock, patch
 
-@pytest.fixture(autouse=True)
-def mock_users_count():
-    """Monkeypatch User.objects.all() → всегда возвращает 3 пользователя"""
+import pytest
+
+
+@pytest.fixture(scope="session", autouse=True)
+def django_test_setup(monkeypatch):
+    """Monkeypatch ПОСЛЕ Django setup"""
     
-    def mock_all():
+    def mock_user_count():
         class MockQuerySet:
             def __len__(self):
                 return 3
-            def __bool__(self):
-                return True
+
             def __iter__(self):
-                yield MagicMock(username='user1', id=1)
-                yield MagicMock(username='user2', id=2)
-                yield MagicMock(username='user3', id=3)
+                for i in range(3):
+                    yield MagicMock(username=f'user{i + 1}', id=i + 1)
+
+            def exists(self):
+                return True
         return MockQuerySet()
     
-    with patch.object(get_user_model().objects, 'all', mock_all):
+    # ✅ Monkeypatch конкретно task_manager.users.models.User
+    with patch('task_manager.users.models.User.objects.all', mock_user_count):
         yield

@@ -44,7 +44,8 @@ addopts = [
     "--strict-markers", 
     "--django-db=reset-state",
     "--no-migrations",
-    "--base-url=http://webserver:9000"
+    "--base-url=http://webserver:9000",
+    "--import-mode=importlib"
 ]
 testpaths = ["tests"]
 python_files = "test_*.py"
