@@ -1,25 +1,16 @@
 from django.db import migrations
 
 def create_test_users(apps, schema_editor):
-    """Создаёт 3 пользователя БЕЗОШИБОЧНО для миграции"""
+    """Создаёт 3 пользователя для ВСЕХ БД (включая тестовую)"""
     User = apps.get_model('users', 'User')
     
-    users_data = [
-        {'username': 'user1', 'password': '123'},
-        {'username': 'user2', 'password': '123'},
-        {'username': 'user3', 'password': '123'},
-    ]
+    # ✅ УДАЛЯЕМ всех user1,user2,user3 + создаём заново
+    User.objects.filter(username__in=['user1', 'user2', 'user3']).delete()
     
-    for data in users_data:
-        # ✅ В миграции используем .password напрямую!
-        user, created = User.objects.get_or_create(
-            username=data['username'],
-            defaults={'password': data['password']}
-        )
-        if not created:
-            # ✅ Прямое присвоение пароля (работает в миграции)
-            user.password = data['password']
-            user.save()
+    # ✅ Создаём ТОЧНО 3 пользователя
+    User.objects.create(username='user1', password='123')
+    User.objects.create(username='user2', password='123')
+    User.objects.create(username='user3', password='123')
 
 def delete_test_users(apps, schema_editor):
     User = apps.get_model('users', 'User')
