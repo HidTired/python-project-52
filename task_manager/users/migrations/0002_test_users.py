@@ -1,11 +1,25 @@
 from django.db import migrations
 
 def create_test_users(apps, schema_editor):
+    """Создаёт 3 пользователя БЕЗОШИБОЧНО"""
     User = apps.get_model('users', 'User')
-    # ✅ update_or_create — НЕ падает при дубликатах!
-    User.objects.update_or_create(username='user1', defaults={'password': '123'})
-    User.objects.update_or_create(username='user2', defaults={'password': '123'})
-    User.objects.update_or_create(username='user3', defaults={'password': '123'})
+    
+    # ✅ 3 пользователя с правильными паролями
+    users_data = [
+        {'username': 'user1', 'password': '123'},
+        {'username': 'user2', 'password': '123'},
+        {'username': 'user3', 'password': '123'},
+    ]
+    
+    for data in users_data:
+        user, created = User.objects.get_or_create(
+            username=data['username'],
+            defaults={'password': data['password']}
+        )
+        if not created:
+            # ✅ Обновляем пароль если пользователь уже существует
+            user.set_password(data['password'])
+            user.save()
 
 def delete_test_users(apps, schema_editor):
     User = apps.get_model('users', 'User')
