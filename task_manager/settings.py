@@ -12,17 +12,19 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# SECURITY WARNING: keep the secret key used for production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -99,6 +101,7 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 
 if DATABASE_URL:
     DATABASES['default'] = dj_database_url.parse(DATABASE_URL)
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -133,17 +136,11 @@ LANGUAGES = [
 USE_I18N = True
 USE_L10N = True
 
-LOCALE_PATHS = [
-    BASE_DIR / 'locale',
-]
-
 LOCALE_PATHS = [BASE_DIR / 'locale']
 
 LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
-
-USE_I18N = True
 
 USE_TZ = True
 
@@ -159,3 +156,10 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 AUTH_USER_MODEL = "users.User"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 🚨 CI FIX: Создаём тестовых пользователей для pytest-playwright
+if 'pytest' in sys.modules:
+    from task_manager.users.models import User
+    User.objects.get_or_create(username='user1', defaults={'password': '123'})
+    User.objects.get_or_create(username='user2', defaults={'password': '123'})
+    User.objects.get_or_create(username='user3', defaults={'password': '123'})
