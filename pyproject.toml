@@ -43,6 +43,7 @@ addopts = [
     "-v",
     "--strict-markers", 
     "--django-db=reset-state",
+    "--no-migrations",
     "--base-url=http://webserver:9000"
 ]
 testpaths = ["tests"]

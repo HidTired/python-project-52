@@ -1,23 +1,12 @@
-from unittest.mock import MagicMock
-
 import pytest
-from django.contrib.auth import get_user_model
+
+from task_manager.users.models import User
 
 
 @pytest.fixture(autouse=True)
-def mock_users_count(monkeypatch):
-    """Monkeypatch для ВСЕХ тестов — возвращаем 3 пользователя"""
-    User = get_user_model()
-    
-    def mock_all(self):
-        class MockQuerySet:
-            def __len__(self):
-                return 3
-
-            def __iter__(self):
-                yield MagicMock(username='user1')
-                yield MagicMock(username='user2')
-                yield MagicMock(username='user3')
-        return MockQuerySet()
-    
-    monkeypatch.setattr(User.objects, 'all', mock_all)
+def create_test_users():
+    """Создаёт 3 пользователей для КАЖДОГО теста"""
+    User.objects.filter(username__in=['user1', 'user2', 'user3']).delete()
+    User.objects.create(username='user1', password='123')
+    User.objects.create(username='user2', password='123')
+    User.objects.create(username='user3', password='123')
