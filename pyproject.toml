@@ -35,3 +35,18 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["task_manager"]
+
+[tool:pytest]
+DJANGO_SETTINGS_MODULE = task_manager.settings
+addopts = 
+    --tb=short
+    -v
+    --strict-markers
+    --django-db=reset-state
+    --base-url=http://webserver:9000
+testpaths = tests
+python_files = test_*.py
+python_classes = Test*
+python_functions = test_*
+markers =
+    playwright: mark a test as a playwright test
