@@ -1,12 +1,9 @@
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+import pytest
 
 
+@pytest.mark.django_db
 class TestUser:
     def test_load_users(self, transactional_db, django_user_model):
-        """CI тест - создаём пользователей ПЕРЕД проверкой"""
-        
         django_user_model.objects.create(username='user1')
         django_user_model.objects.create(username='user2')
         django_user_model.objects.create(username='user3')
