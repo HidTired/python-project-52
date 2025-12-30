@@ -1,4 +1,30 @@
-﻿<h1>Tasks</h1>
-{% for task in tasks %}
-<p>{{ task.name }}</p>
-{% endfor %}
+﻿{% extends "home.html" %}
+
+{% load i18n %}
+{% load django_bootstrap5 %}
+
+{% block bootstrap5_title %}{% translate "Tasks" %}{% endblock %}
+
+{% block main %}
+<h1 class="my-4">{{ title|default:"Tasks" }}</h1>
+<div class="row">
+    {% for task in object_list %}
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ task.name }}</h5>
+                <p class="card-text">{{ task.description|truncatewords:20 }}</p>
+                <a href="/tasks/{{ task.pk }}/" class="btn btn-primary">{% translate "View" %}</a>
+                <a href="/tasks/{{ task.pk }}/update/" class="btn btn-outline-primary btn-sm">{% translate "Edit" %}</a>
+                <a href="/tasks/{{ task.pk }}/delete/" class="btn btn-outline-danger btn-sm">{% translate "Delete" %}</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">{% translate "No tasks found" %}</div>
+    </div>
+    {% endfor %}
+</div>
+<a href="/tasks/create/" class="btn btn-success">{% translate "Create task" %}</a>
+{% endblock %}

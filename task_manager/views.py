@@ -90,3 +90,5 @@ class UserCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def test_func(self):
         return self.request.user.is_superuser
+    
+    login_url = '/users/login/'

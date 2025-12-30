@@ -1,138 +1,31 @@
-{% extends 'base.html' %}
-
+{% extends 'home.html' %}
 {% load i18n %}
-{% load django_bootstrap5 %}
-{% load static %}
 
-{% block navigation %}
-<header class="flex-shrink-0 bg-dark border-bottom shadow-sm">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Task Manager Navigation">
-        <div class="container-fluid">
-            <!-- Логотип с авторедиректом на Admin -->
-            <a class="navbar-brand fw-bold fs-4" href="{% if user.is_authenticated %}/admin/{% else %}/{% endif %}">
-                <i class="bi bi-check-circle-fill me-2 text-success"></i>
-                {% translate "Task Manager" %}
-            </a>
-
-            <!-- Переключение языка (ИСПРАВЛЕНО!) -->
-            {% get_current_language as CURRENT_LANGUAGE %}
-            <div class="d-flex gap-2">
-                {% if CURRENT_LANGUAGE == "ru" %}
-                <form method="post" action="/set_language/" style="display: inline;">
-                    {% csrf_token %}
-                    <input type="hidden" name="language" value="en">
-                    <button class="btn btn-outline-light btn-sm" type="submit">🇺🇸 English</button>
-                </form>
-                {% elif CURRENT_LANGUAGE == "en" %}
-                <form method="post" action="/set_language/" style="display: inline;">
-                    {% csrf_token %}
-                    <input type="hidden" name="language" value="ru">
-                    <button class="btn btn-outline-light btn-sm" type="submit">🇷🇺 Русский</button>
-                </form>
-                {% endif %}
-            </div>
-
-            <!-- Мобильное меню -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#task_manager"
-                    aria-controls="task_manager" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Основное меню -->
-            <div class="collapse navbar-collapse" id="task_manager">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    {% if user.is_authenticated %}
-                    <!-- АВТОРИЗОВАННЫЙ -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/users/">
-                            <i class="bi bi-people me-1"></i>{% translate 'Users' %}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/statuses/">
-                            <i class="bi bi-tag me-1"></i>{% translate 'Statuses' %}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/labels/">
-                            <i class="bi bi-label me-1"></i>{% translate 'Labels' %}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/tasks/">
-                            <i class="bi bi-check2-square me-1"></i>{% translate 'Tasks' %}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/">
-                            <i class="bi bi-gear-fill me-1 text-warning"></i>{% translate 'Admin' %}
-                        </a>
-                    </li>
-                    <!-- Logout (ИСПРАВЛЕНО!) -->
-                    <li class="nav-item dropdown">
-                        <form action="/users/logout/" method="post" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="nav-link btn btn-link p-0 dropdown-toggle text-light" 
-                                    style="border: none; background: none;" data-bs-toggle="dropdown">
-                                <i class="bi bi-person-circle me-1"></i>{{ user.username }}
-                            </button>
-                        </form>
-                    </li>
-                    {% else %}
-                    <!-- НЕАВТОРИЗОВАННЫЙ -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/users/login/">
-                            <i class="bi bi-box-arrow-in-right me-1"></i>{% translate 'Sign in' %}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/users/create/">
-                            <i class="bi bi-person-plus me-1"></i>{% translate 'Sign up' %}
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-{% endblock %}
+{% block bootstrap5_title %}{% translate "Task Manager - Главная" %}{% endblock %}
 
 {% block main %}
-<!-- КРАСИВАЯ ГЛАВНАЯ СТРАНИЦА -->
-<div class="bg-gradient text-white min-vh-100 d-flex align-items-center">
+<div class="min-vh-100 py-5" style="background-color: #f8f9fa;">
+
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-8 col-xl-6 text-center">
-                <!-- Главный баннер -->
+            <div class="col-lg-8 col-xl-6 text-dark text-center">
+                
                 <div class="hero-content mb-5">
                     <i class="bi bi-check2-all display-1 text-success mb-4 d-block"></i>
-                    <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">
-                        {% translate "Task Manager" %}
-                    </h1>
-                    <p class="lead mb-5 animate__animated animate__fadeInUp">
-                        {% translate "Powerful and flexible task management system for your team" %}
-                    </p>
+                    <h1 class="display-3 fw-bold mb-4">{% translate "Task Manager" %}</h1>
+                    <p class="lead mb-5">{% translate "Powerful and flexible task management system for your team" %}</p>
                     
                     {% if user.is_authenticated %}
-                    <!-- АВТОРИЗОВАННЫЙ - РЕДИРЕКТ В ADMIN -->
-                    <div class="alert alert-success shadow-lg border-0 animate__animated animate__bounceIn">
+                    <div class="alert alert-success shadow-lg border-0">
                         <div class="d-flex align-items-center">
                             <i class="bi bi-check-circle-fill fs-1 text-success me-3"></i>
                             <div>
                                 <h4>{% translate "Welcome back" %}, {{ user.username }}!</h4>
-                                <p class="mb-0">{% translate "Redirecting to admin panel..." %}</p>
+                                <p class="mb-0">{% translate "Manage your tasks using quick links below" %}</p>
                             </div>
                         </div>
                     </div>
-                    <script>
-                        // АВТОРЕДИРЕКТ В ADMIN (3 секунды)
-                        setTimeout(function() {
-                            window.location.href = '/admin/';
-                        }, 3000);
-                    </script>
                     {% else %}
-                    <!-- НЕАВТОРИЗОВАННЫЙ - КНОПКИ ВХОДА -->
                     <div class="row g-3 mb-5">
                         <div class="col-md-6">
                             <a href="/users/login/" class="btn btn-success btn-lg w-100 shadow-lg py-3 fs-5">
@@ -140,7 +33,7 @@
                             </a>
                         </div>
                         <div class="col-md-6">
-                            <a href="/users/create/" class="btn btn-outline-light btn-lg w-100 shadow-lg py-3 fs-5">
+                            <a href="/users/create/" class="btn btn-outline-dark btn-lg w-100 shadow-lg py-3 fs-5">
                                 <i class="bi bi-person-plus me-2"></i>{% translate "Sign Up" %}
                             </a>
                         </div>
@@ -148,30 +41,25 @@
                     {% endif %}
                 </div>
 
-                <!-- Быстрые ссылки -->
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <a href="/users/" class="btn btn-outline-light btn-lg w-100 py-3">
-                            <i class="bi bi-people fs-1 d-block mb-2"></i>
-                            {% translate "Users" %}
+                        <a href="/users/" class="btn btn-outline-primary btn-lg w-100 py-3">
+                            <i class="bi bi-people fs-1 d-block mb-2"></i>{% translate "Users" %}
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <a href="/tasks/" class="btn btn-outline-light btn-lg w-100 py-3">
-                            <i class="bi bi-check2-square fs-1 d-block mb-2"></i>
-                            {% translate "Tasks" %}
+                        <a href="/tasks/" class="btn btn-outline-primary btn-lg w-100 py-3">
+                            <i class="bi bi-check2-square fs-1 d-block mb-2"></i>{% translate "Tasks" %}
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <a href="/statuses/" class="btn btn-outline-light btn-lg w-100 py-3">
-                            <i class="bi bi-tag fs-1 d-block mb-2"></i>
-                            {% translate "Statuses" %}
+                        <a href="/statuses/" class="btn btn-outline-primary btn-lg w-100 py-3">
+                            <i class="bi bi-tag fs-1 d-block mb-2"></i>{% translate "Statuses" %}
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <a href="/labels/" class="btn btn-outline-light btn-lg w-100 py-3">
-                            <i class="bi bi-label fs-1 d-block mb-2"></i>
-                            {% translate "Labels" %}
+                        <a href="/labels/" class="btn btn-outline-primary btn-lg w-100 py-3">
+                            <i class="bi bi-label fs-1 d-block mb-2"></i>{% translate "Labels" %}
                         </a>
                     </div>
                 </div>
@@ -179,29 +67,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block footer %}
-<footer class="bg-dark text-light mt-auto pt-4 border-top">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <h5><i class="bi bi-cpu me-2"></i>Task Manager</h5>
-                <p class="text-muted">{% translate "Professional task management system" %}</p>
-            </div>
-            <div class="col-md-6 text-md-end">
-                <a class="text-muted me-3" href="https://ru.hexlet.io/">
-                    <i class="bi bi-heart-fill me-1"></i>Powered by Hexlet
-                </a>
-                <a class="text-muted" href="https://github.com/HidTired/python-project-52">
-                    <i class="bi bi-github"></i> HidTired/python-project-52
-                </a>
-            </div>
-        </div>
-        <hr class="my-4">
-        <div class="text-center text-muted">
-            <small>&copy; 2025 HidTired. {% translate "All rights reserved." %}</small>
-        </div>
-    </div>
-</footer>
 {% endblock %}

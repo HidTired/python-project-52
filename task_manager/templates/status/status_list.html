@@ -1,4 +1,44 @@
-﻿<h1>Statuses</h1>
-{% for status in object_list %}
-<p>{{ status.name }}</p>
-{% endfor %}
+﻿{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Статусы{% endblock %}
+
+{% block main %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="main-card p-5">
+            <div class="d-flex justify-content-between mb-4">
+                <h1 class="h2 fw-bold mb-0">🏷️ Статусы</h1>
+                <a href="{% url 'statuses:create' %}" class="btn btn-success btn-modern">
+                    <i class="bi bi-plus-circle"></i>
+                </a>
+            </div>
+            <div class="row g-3">
+                {% for status in object_list %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ status.name }}</h5>
+                            <p class="text-muted small mb-2">ID: {{ status.id }}</p>
+                            <div class="btn-group w-100" role="group">
+                                <a href="{% url 'statuses:update' status.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'statuses:delete' status.pk %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <i class="bi bi-toggle-off fs-1 text-muted mb-3"></i>
+                    <p class="text-muted">Статусы не найдены</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

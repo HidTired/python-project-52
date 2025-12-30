@@ -1,17 +1,119 @@
-{% extends 'index.html' %}
+{% extends 'base.html' %}
 
 {% load django_bootstrap5 %}
 {% load i18n %}
+{% load static %}
 
-{% block main %}
-    <h1 class="my-4"> </h1>
-    <h1 class="my-4"> </h1>
-    <div class="card">
-        <div class="card-body p-5 bg-light">
-            <div class="display-4">{% translate "Welcome to Task Manager!" %}</div>
-            <p class="lead">{% translate "Smart planning" %}</p>
-            <hr>
-            <a class="btn btn-primary btn-lg" href="https://github.com/HidTired/python-project-52">{% translate "Owner Repo" %}</a>
+{% block bootstrap5_title %}{% translate "Task Manager" %}{% endblock %}
+
+{% block navigation %}
+<header class="flex-shrink-0 bg-dark border-bottom shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Task Manager Navigation">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold fs-4" href="{% if user.is_authenticated %}/admin/{% else %}/{% endif %}">
+                <i class="bi bi-check-circle-fill me-2 text-success"></i>
+                {% translate "Task Manager" %}
+            </a>
+
+            {% get_current_language as CURRENT_LANGUAGE %}
+            <div class="d-flex gap-2">
+                {% if CURRENT_LANGUAGE == "ru" %}
+                <form method="post" action="/set_language/" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="language" value="en">
+                    <button class="btn btn-outline-light btn-sm" type="submit">🇺🇸 English</button>
+                </form>
+                {% elif CURRENT_LANGUAGE == "en" %}
+                <form method="post" action="/set_language/" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="language" value="ru">
+                    <button class="btn btn-outline-light btn-sm" type="submit">🇷🇺 Русский</button>
+                </form>
+                {% endif %}
+            </div>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#task_manager"
+                    aria-controls="task_manager" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="task_manager">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/">
+                            <i class="bi bi-people me-1"></i>{% translate 'Users' %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/statuses/">
+                            <i class="bi bi-tag me-1"></i>{% translate 'Statuses' %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/labels/">
+                            <i class="bi bi-label me-1"></i>{% translate 'Labels' %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tasks/">
+                            <i class="bi bi-check2-square me-1"></i>{% translate 'Tasks' %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/">
+                            <i class="bi bi-gear-fill me-1 text-warning"></i>{% translate 'Admin' %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <form action="/users/logout/" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link p-0 text-light" 
+                                    style="border: none; background: none;">
+                                <i class="bi bi-person-circle me-1"></i>{{ user.username }}
+                            </button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/login/">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>{% translate 'Sign in' %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/create/">
+                            <i class="bi bi-person-plus me-1"></i>{% translate 'Sign up' %}
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+{% endblock %}
+
+{% block footer %}
+<footer class="bg-dark text-light mt-auto pt-4 border-top">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h5><i class="bi bi-cpu me-2"></i>Task Manager</h5>
+                <p class="text-muted">{% translate "Professional task management system" %}</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a class="text-muted me-3" href="https://ru.hexlet.io/">
+                    <i class="bi bi-heart-fill me-1"></i>Powered by Hexlet
+                </a>
+                <a class="text-muted" href="https://github.com/HidTired/python-project-52">
+                    <i class="bi bi-github"></i> HidTired/python-project-52
+                </a>
+            </div>
+        </div>
+        <hr class="my-4">
+        <div class="text-center text-muted">
+            <small>&copy; 2025 HidTired. {% translate "All rights reserved." %}</small>
         </div>
     </div>
+</footer>
 {% endblock %}

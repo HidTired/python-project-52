@@ -1,4 +1,28 @@
-﻿<h1>Labels</h1>
-{% for label in object_list %}
-<p>{{ label.name }}</p>
-{% endfor %}
+﻿{% extends "home.html" %}
+
+{% load i18n %}
+{% load django_bootstrap5 %}
+
+{% block bootstrap5_title %}{% translate "Labels" %}{% endblock %}
+
+{% block main %}
+<h1 class="my-4">{{ title|default:"Labels" }}</h1>
+<div class="row">
+    {% for label in object_list %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ label.name }}</h5>
+                <a href="/labels/{{ label.pk }}/update/" class="btn btn-primary btn-sm">{% translate "Edit" %}</a>
+                <a href="/labels/{{ label.pk }}/delete/" class="btn btn-danger btn-sm">{% translate "Delete" %}</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">{% translate "No labels found" %}</div>
+    </div>
+    {% endfor %}
+</div>
+<a href="/labels/create/" class="btn btn-success">{% translate "Create label" %}</a>
+{% endblock %}

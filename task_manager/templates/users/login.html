@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n django_bootstrap5 %}
+
+{% block title %}Вход в Task Manager{% endblock %}
+
+{% block navigation %}{% endblock %} 
+
+{% block main %}
+<div class="row justify-content-center min-vh-100 pt-5 pb-5">
+    <div class="col-md-6 col-lg-4">
+        <div class="main-card p-5 text-center">
+            <div class="mb-5">
+                <i class="bi bi-shield-lock display-1 text-primary mb-4"></i>
+                <h1 class="h3 fw-bold mb-2">Добро пожаловать!</h1>
+                <p class="text-muted lead">Войдите в систему</p>
+            </div>
+
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    {% bootstrap_field form.username layout='floating' show_label=False placeholder='Логин' %}
+                </div>
+                
+
+                <div class="mb-4">
+                    {% bootstrap_field form.password layout='floating' show_label=False placeholder='Пароль' %}
+                </div>
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger mb-4">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 btn-modern py-3 mb-4">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>
+                    Войти
+                </button>
+            </form>
+
+            <div class="divider d-flex align-items-center mb-3">
+                <span class="flex-grow-1 border-top border-light"></span>
+                <span class="px-3 text-muted small">или</span>
+                <span class="flex-grow-1 border-top border-light"></span>
+            </div>
+            
+            <a href="{% url 'users:create' %}" class="btn btn-outline-primary btn-modern w-100 py-3">
+                <i class="bi bi-person-plus me-2"></i>
+                Создать аккаунт
+            </a>
+
+            <div class="mt-4">
+                <a href="#" class="text-muted small">Забыли пароль?</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

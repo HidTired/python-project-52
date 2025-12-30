@@ -1,4 +1,28 @@
-﻿<h1>Statuses</h1>
-{% for status in object_list %}
-<p>{{ status.name }}</p>
-{% endfor %}
+﻿{% extends "home.html" %}
+
+{% load i18n %}
+{% load django_bootstrap5 %}
+
+{% block bootstrap5_title %}{% translate "Statuses" %}{% endblock %}
+
+{% block main %}
+<h1 class="my-4">{{ title|default:"Statuses" }}</h1>
+<div class="row">
+    {% for status in object_list %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ status.name }}</h5>
+                <a href="/statuses/{{ status.pk }}/update/" class="btn btn-primary btn-sm">{% translate "Edit" %}</a>
+                <a href="/statuses/{{ status.pk }}/delete/" class="btn btn-danger btn-sm">{% translate "Delete" %}</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">{% translate "No statuses found" %}</div>
+    </div>
+    {% endfor %}
+</div>
+<a href="/statuses/create/" class="btn btn-success">{% translate "Create status" %}</a>
+{% endblock %}

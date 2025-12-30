@@ -1,4 +1,38 @@
-﻿<h1>Users</h1>
-{% for user in users %}
-<p>{{ user.username }}</p>
-{% endfor %}
+﻿{% extends "home.html" %}
+
+{% load i18n %}
+{% load django_bootstrap5 %}
+
+{% block bootstrap5_title %}{% translate "Users" %}{% endblock %}
+
+{% block main %}
+<h1 class="my-4">{{ title|default:"Users" }}</h1>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>{% translate "ID" %}</th>
+        <th>{% translate "Username" %}</th>
+        <th>{% translate "Full name" %}</th>
+        <th>{% translate "Created date" %}</th>
+        <th>{% translate "Actions" %}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in object_list %}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.first_name }} {{ user.last_name }}</td>
+        <td>{{ user.created_at|date:'d.m.Y H:i' }}</td>
+        <td>
+            <a href="/users/{{ user.pk }}/update/" class="btn btn-sm btn-primary">{% translate "Edit" %}</a>
+            <a href="/users/{{ user.pk }}/delete/" class="btn btn-sm btn-danger">{% translate "Delete" %}</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">{% translate "No users found" %}</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+<a href="/users/create/" class="btn btn-success">{% translate "Create user" %}</a>
+{% endblock %}
