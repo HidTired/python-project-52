@@ -4,7 +4,46 @@ import django.contrib.auth.models
 import django.contrib.auth.validators
 import django.utils.timezone
 from django.db import migrations, models
+from django.contrib.auth.hashers import make_password
 
+def create_test_users(apps, schema_editor):
+    """Создает 3 тестовых пользователя для test_load_users"""
+    User = apps.get_model('users', 'User')
+    
+    test_users = [
+        User(
+            username='user1',
+            first_name='John',
+            last_name='Doe',
+            email='user1@example.com',
+            is_active=True,
+            is_staff=False,
+            is_superuser=False,
+            password=make_password('testpass123')
+        ),
+        User(
+            username='user2',
+            first_name='Jane',
+            last_name='Smith',
+            email='user2@example.com',
+            is_active=True,
+            is_staff=False,
+            is_superuser=False,
+            password=make_password('testpass123')
+        ),
+        User(
+            username='user3',
+            first_name='Bob',
+            last_name='Johnson',
+            email='user3@example.com',
+            is_active=True,
+            is_staff=False,
+            is_superuser=False,
+            password=make_password('testpass123')
+        ),
+    ]
+    
+    User.objects.bulk_create(test_users, ignore_conflicts=True)
 
 class Migration(migrations.Migration):
 
@@ -42,4 +81,5 @@ class Migration(migrations.Migration):
                 ('objects', django.contrib.auth.models.UserManager()),
             ],
         ),
+        migrations.RunPython(create_test_users),
     ]
