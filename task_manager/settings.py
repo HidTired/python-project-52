@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-import sys
 import dj_database_url
 from dotenv import load_dotenv
 
@@ -156,10 +155,3 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 AUTH_USER_MODEL = "users.User"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# 🚨 CI FIX: Создаём тестовых пользователей для pytest-playwright
-if 'pytest' in sys.modules:
-    from task_manager.users.models import User
-    User.objects.get_or_create(username='user1', defaults={'password': '123'})
-    User.objects.get_or_create(username='user2', defaults={'password': '123'})
-    User.objects.get_or_create(username='user3', defaults={'password': '123'})
