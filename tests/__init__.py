@@ -10,9 +10,19 @@ def mock_users():
             return 3
 
         def __iter__(self):
-            yield MagicMock(username='user1')
-            yield MagicMock(username='user2')
-            yield MagicMock(username='user3')
+            yield MagicMock(username='user1', id=1)
+            yield MagicMock(username='user2', id=2)
+            yield MagicMock(username='user3', id=3)
+
+        def all(self):
+            """Фикс для TaskForm.queryset.all()"""
+            return self
+
+        def __getattr__(self, name):
+            """Перехватывает ЛЮБЫЕ вызовы форм"""
+            if name.startswith('filter_'):
+                return self  # filter(name=...) → возвращаем себя
+            return MagicMock()
 
     return MockQuerySet()
 
