@@ -1,53 +1,32 @@
 [project]
 name = "hexlet-code"
 version = "0.1.0"
-description = ""
-authors = [{name = "HidTired", email = "Dentanyabonya@mail.ru"}]
+description = "Add your description here"
 readme = "README.md"
-packages = [
-  { include = "task_manager" },
-]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
-    "dj-database-url>=2.3.0",
-    "django==5.2",
-    "django-bootstrap5>=25.1",
+    "dj-database-url>=3.0.1",
+    "django>=5.2.4",
+    "django-bootstrap5==24.3",
     "django-filter>=25.1",
     "gunicorn>=23.0.0",
-    "load-dotenv>=0.1.0",
-    "psycopg[binary]>=3.2.6",
-    "python-dotenv>=1.1.0",
+    "psycopg2-binary>=2.9.10",
+    "python-dotenv>=1.1.1",
     "rollbar>=1.3.0",
-    "uvicorn>=0.34.0",
     "whitenoise>=6.9.0",
 ]
 
 [dependency-groups]
 dev = [
-    "coverage>=7.8.0",
+    "coverage>=7.10.2",
+    "pytest>=8.4.1",
     "pytest-django>=4.11.1",
-    "ruff>=0.11.5",
+    "ruff>=0.12.7",
 ]
 
-[build-system]
+[build-system] 
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.hatch.build.targets.wheel]
+[tool.hatch.build.targets.wheel] 
 packages = ["task_manager"]
-
-[[tool.pytest.ini_options]]
-DJANGO_SETTINGS_MODULE = "task_manager.settings"
-addopts = [
-    "--tb=short",
-    "-v",
-    "--strict-markers", 
-    "--django-db=reset-state",
-    "--no-migrations",
-    "--base-url=http://webserver:9000",
-    "--import-mode=importlib"
-]
-testpaths = ["tests"]
-python_files = "test_*.py"
-python_classes = "Test*"
-python_functions = "test_*"

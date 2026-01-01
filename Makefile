@@ -1,55 +1,45 @@
 install:
-	pip install uv
-	pip install gunicorn uvicorn
-	uv venv
-	uv sync --frozen
+    uv sync
 
-dev:
-	python manage.py runserver
-
-lint:
-	uv sync --dev
-	uv run ruff check .
-
-lint-fix:
-	uv sync --dev
-	uv run ruff check --fix .
-
-start:
-	python manage.py runserver
-
-render-start:
-	python manage.py migrate --noinput && gunicorn task_manager.wsgi
-
-build:
-	./build.sh
-
-test:
-	uv sync --dev
-	uv run python manage.py test
-
-test-cov:
-	uv sync --dev
-	uv run coverage run ./manage.py test
-	uv run coverage xml
+dev-install:
+    uv sync --group dev
 
 migrate:
-	python manage.py migrate
-
-sync:
-	uv sync
-
-migrations:
-	python manage.py makemigrations
-
-migrations-user:
-	python manage.py makemigrations user
+    uv run python manage.py migrate
 
 collectstatic:
-	python manage.py collectstatic --no-input
+    uv run python manage.py collectstatic --noinput
 
-translate-compile:
-	django-admin compilemessages
+run:
+    uv run python manage.py runserver
 
-translate-makemessages:
-	django-admin makemessages -l ru
+render-start:
+    uv run gunicorn task_manager.wsgi
+
+build:
+    ./build.sh
+
+lint:
+    uv run ruff check
+
+lint-fix:
+    uv run ruff check --fix
+
+test:
+    uv run pytest --ds=task_manager.settings --reuse-db
+
+coverage:
+    uv run coverage run --omit='*/migrations/*,*/settings.py,*/venv/*,*/.venv/*' -m pytest --ds=task_manager.settings
+    uv run coverage report --show-missing --skip-covered
+
+ci-install:
+    uv sync --group dev
+
+ci-migrate:
+    uv run python manage.py makemigrations --noinput && \
+    uv run python manage.py migrate --noinput
+
+ci-test:
+    uv run coverage run --omit='*/migrations/*,*/settings.py,*/venv/*,*/.venv/*' -m pytest --ds=task_manager.settings --reuse-db
+    uv run coverage xml
+    uv run coverage report --show-missing --skip-covered
