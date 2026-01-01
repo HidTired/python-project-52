@@ -6,12 +6,15 @@ class TestUser:
     def test_load_users(self, django_user_model):
         User = django_user_model
 
-        print("== creating users in test ==")
+        print("=== TEST_10_SESSION STARTED ===")
 
+        # Создаём тестовых пользователей
         for name in ["user1", "user2", "user3"]:
-            User.objects.get_or_create(username=name)
+            u, created = User.objects.get_or_create(username=name)
+            print("created:", name, "->", created)
 
-        users = User.objects.all()
-        print("== users count ==", users.count())
+        print("=== QUERY USERS ===")
+        print("count():", User.objects.count())
+        print("all():", list(User.objects.values_list("username", flat=True)))
 
-        assert users.count() == 3
+        assert User.objects.count() == 3
