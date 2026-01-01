@@ -46,4 +46,5 @@ ci-test:
 
 test-cov:
 	uv run coverage run --omit='*/migrations/*,*/settings.py,*/venv/*,*/.venv/*' -m pytest --ds=task_manager.settings
+	uv run coverage xml
 	uv run coverage report --show-missing --skip-covered
