@@ -1,10 +1,11 @@
 import pytest
+from django.contrib.auth import get_user_model
 
 
 @pytest.fixture(autouse=True)
-def ensure_test_users(django_user_model, django_db_blocker):
-    """Гарантирует, что в БД есть user1, user2, user3."""
+def create_test_users(django_user_model, django_db_blocker):
+    """Создаёт user1, user2, user3 перед каждым тестом."""
     with django_db_blocker.unblock():
-        User = django_user_model
-        for name in ["user1", "user2", "user3"]:
-            User.objects.get_or_create(username=name)
+        User = get_user_model()
+        for username in ["user1", "user2", "user3"]:
+            User.objects.get_or_create(username=username)
