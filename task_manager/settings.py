@@ -117,15 +117,6 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = 'login'
 
-FIXTURE_DIRS = [
-    BASE_DIR / 'users' / 'fixtures' / 'user.json',
-    BASE_DIR / 'tasks' / 'fixtures' / 'task.json',
-    BASE_DIR / 'statuses' / 'fixtures' / 'status.json',
-    BASE_DIR / 'labels' / 'fixtures' / 'label.json'
-]
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGES = [
     ('en', 'English'),
