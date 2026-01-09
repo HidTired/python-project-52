@@ -1,9 +1,10 @@
 from django.db import migrations
 from django.utils.crypto import get_random_string
 
+
 def create_test_users(apps, schema_editor):
     """Создаёт 3 тестовых пользователя с безопасными паролями"""
-    User = apps.get_model('users', 'User')
+    user_model = apps.get_model('users', 'User')
 
     def generate_secure_password():
         chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
@@ -34,8 +35,8 @@ def create_test_users(apps, schema_editor):
     ]
     
     for user_data in test_users_data:
-        if not User.objects.filter(username=user_data['username']).exists():
-            User.objects.create_user(
+        if not user_model.objects.filter(username=user_data['username']).exists():
+            user_model.objects.create_user(
                 username=user_data['username'],
                 first_name=user_data['first_name'],
                 last_name=user_data['last_name'],
@@ -48,11 +49,13 @@ def create_test_users(apps, schema_editor):
             print(f" Создан тестовый пользователь: {user_data['username']}")
             print(f"   Пароль: {user_data['password']}")
 
+
 def remove_test_users(apps, schema_editor):
     """Удаляет тестовых пользователей (для отката миграции)"""
-    User = apps.get_model('users', 'User')
+    user_model = apps.get_model('users', 'User')
     usernames = ['user1', 'user2', 'user3']
-    User.objects.filter(username__in=usernames).delete()
+    user_model.objects.filter(username__in=usernames).delete()
+
 
 class Migration(migrations.Migration):
     dependencies = [
