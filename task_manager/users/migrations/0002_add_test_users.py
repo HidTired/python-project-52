@@ -1,16 +1,13 @@
-
 from django.db import migrations
-from django.contrib.auth.hashers import make_password
 from django.utils.crypto import get_random_string
 
 def create_test_users(apps, schema_editor):
     """Создаёт 3 тестовых пользователя с безопасными паролями"""
     User = apps.get_model('users', 'User')
-    
 
     def generate_secure_password():
         chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
-        return get_random_string(16, chars)
+        return get_random_string(16, chars) + '2026!'
     
     test_users_data = [
         {
@@ -18,7 +15,7 @@ def create_test_users(apps, schema_editor):
             'first_name': 'John',
             'last_name': 'Doe',
             'email': 'user1@example.com',
-            'password': generate_secure_password(), 
+            'password': generate_secure_password(),
         },
         {
             'username': 'user2',
@@ -37,7 +34,6 @@ def create_test_users(apps, schema_editor):
     ]
     
     for user_data in test_users_data:
-
         if not User.objects.filter(username=user_data['username']).exists():
             User.objects.create_user(
                 username=user_data['username'],
@@ -49,7 +45,8 @@ def create_test_users(apps, schema_editor):
                 is_staff=False,
                 is_superuser=False,
             )
-            print(f"✅ Создан тестовый пользователь: {user_data['username']}")
+            print(f" Создан тестовый пользователь: {user_data['username']}")
+            print(f"   Пароль: {user_data['password']}")
 
 def remove_test_users(apps, schema_editor):
     """Удаляет тестовых пользователей (для отката миграции)"""
