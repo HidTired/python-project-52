@@ -20,12 +20,16 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ status.name }}</h5>
                             <p class="text-muted small mb-2">ID: {{ status.id }}</p>
-                            <div class="btn-group w-100" role="group">
-                                <a href="{% url 'statuses:update' status.pk %}" class="btn btn-sm btn-outline-primary">
-                                    <i class="bi bi-pencil"></i>
+                            <div class="btn-group w-100" aria-label="Действия со статусом {{ status.name }}">
+                                <a href="{% url 'statuses:update' status.pk %}" 
+                                   class="btn btn-sm btn-outline-primary"
+                                   aria-label="Редактировать статус «{{ status.name }}»">
+                                    <i class="bi bi-pencil" aria-hidden="true"></i>
                                 </a>
-                                <a href="{% url 'statuses:delete' status.pk %}" class="btn btn-sm btn-outline-danger">
-                                    <i class="bi bi-trash"></i>
+                                <a href="{% url 'statuses:delete' status.pk %}" 
+                                   class="btn btn-sm btn-outline-danger"
+                                   aria-label="Удалить статус «{{ status.name }}»">
+                                    <i class="bi bi-trash" aria-hidden="true"></i>
                                 </a>
                             </div>
                         </div>

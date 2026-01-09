@@ -21,8 +21,6 @@ class User(AbstractUser):
         return f"{self.first_name} {self.last_name}"
 
     def save(self, *args, **kwargs):
-        if self.username:
-            self.username = self.username
         if self.email:
             self.email = self.email.lower()
         super().save(*args, **kwargs)
