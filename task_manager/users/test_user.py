@@ -51,5 +51,6 @@ class UserTestCase(TestCase):
         orig_count = User.objects.count()
         response = self.client.post(f'/users/{self.other_user.id}/delete/', {})
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(User.objects.count(), orig_count)
+        self.assertEqual(User.objects.count(), orig_count) 
+
     
