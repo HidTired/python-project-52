@@ -20,6 +20,14 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+ROLLBAR = {
+    'access_token': os.getenv('ROLLBAR_ACCESS_TOKEN', 'd3083ebee2574328bba7d597f5797041'),
+    'environment': 'production' if not DEBUG else 'development',
+    'code_version': '1.0.0',
+    'root': BASE_DIR,
+    'branch': 'main',
+}
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -64,6 +72,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'rollbar.contrib.django.RollbarNotifierMiddleware', 
 ]
 
 ROOT_URLCONF = 'task_manager.urls'
@@ -116,7 +125,6 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = 'login'
-
 
 LANGUAGES = [
     ('en', 'English'),
