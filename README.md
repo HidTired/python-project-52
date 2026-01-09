@@ -15,8 +15,8 @@ python -m venv .venv
 .venv\Scripts\Activate.ps1
 
 ## Установить зависимости
-pip install -e .
-python manage.py migrate
+ - pip install -e .
+ - python manage.py migrate
 
 ## Запуск
 python manage.py runserver
