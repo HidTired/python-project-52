@@ -48,6 +48,8 @@ class UserTestCase(TestCase):
 
     def test_cannot_delete_other_user(self):
         self.client.login(username='testuser', password='testpass')
+        orig_count = User.objects.count()
         response = self.client.post(f'/users/{self.other_user.id}/delete/', {})
-        self.assertEqual(response.status_code, 302) 
-        self.assertEqual(User.objects.count(), 3)    
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(User.objects.count(), orig_count)
+    
