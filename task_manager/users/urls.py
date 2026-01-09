@@ -1,12 +1,12 @@
-﻿from django.contrib import admin
-from django.urls import include, path
-from django.views.generic import TemplateView
+﻿from django.urls import path
+
+from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('users/', include('task_manager.users.urls')),
-    path('statuses/', include('task_manager.statuses.urls')),
-    path('tasks/', include('task_manager.tasks.urls')),
-    path('labels/', include('task_manager.labels.urls')),
-    path('', TemplateView.as_view(template_name='index.html'), name='home'),
+    path('', views.UserListView.as_view(), name='user_list'),
+    path('create/', views.UserCreateView.as_view(), name='user_create'),
+    path('<int:pk>/update/', views.UserUpdateView.as_view(), 
+         name='user_update'),
+    path('<int:pk>/delete/', views.UserDeleteView.as_view(), 
+         name='user_delete'),
 ]
