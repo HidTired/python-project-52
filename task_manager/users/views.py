@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db import models
 from django.shortcuts import redirect
@@ -7,7 +8,8 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import UserForm
-from .models import User
+
+User = get_user_model()
 
 
 class UserListView(LoginRequiredMixin, ListView):
@@ -22,12 +24,15 @@ class UserListView(LoginRequiredMixin, ListView):
         return context
 
 
-class UserCreateView(LoginRequiredMixin, CreateView):
+class UserCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = User
     form_class = UserForm
     template_name = 'general/general_form.html'
     success_url = reverse_lazy('home')
     success_message = _('User successfully created')
+
+    def test_func(self):
+        return self.request.user.is_superuser  
 
     def form_valid(self, form):
         messages.success(self.request, self.success_message)
@@ -51,7 +56,7 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     )
 
     def test_func(self):
-        return self.get_object() == self.request.user
+        return self.request.user.is_superuser  
 
     def handle_no_permission(self):
         messages.error(self.request, self.permission_denied_message)
@@ -82,9 +87,7 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     protected_url = reverse_lazy('home')
 
     def test_func(self):
-        obj = self.get_object()
-        user = self.request.user    
-        return user.is_superuser and obj != user
+        return self.request.user.is_superuser  
 
     def handle_no_permission(self):
         messages.error(self.request, self.permission_denied_message)
