@@ -32,7 +32,7 @@ class UserTestCase(TestCase):
             'password1': 'pass123',
             'password2': 'pass123'
         })
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)  
 
     def test_user_list_view(self):
         self.client.login(username='admin', password='adminpass')
@@ -49,4 +49,5 @@ class UserTestCase(TestCase):
     def test_cannot_delete_other_user(self):
         self.client.login(username='testuser', password='testpass')
         response = self.client.post(f'/users/{self.other_user.id}/delete/', {})
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 302) 
+        self.assertEqual(User.objects.count(), 3)    
