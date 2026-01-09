@@ -4,6 +4,7 @@
 
 ## Клонировать репозиторий
 git clone https://github.com/HidTired/python-project-52.git
+
 cd python-project-52
 
 ## Создать виртуальное окружение
